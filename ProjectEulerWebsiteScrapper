@@ -1,0 +1,26 @@
+#Install and import Beautifulsoup and  Tag packages from bs4 
+
+from bs4 import BeautifulSoup,Tag
+import requests
+
+def projectEulerScrapper():
+    saveData ='\t PROJECT EULER ALL PROBLEMS \n'
+    for i in range(1,449): # Taking 448 problems in the euler website, you can edit to the number problems you want to save
+        url = requests.get("http://projecteuler.net/problem="+str(i))     
+        data = url.text
+        parsed_soup = ''
+        soup = BeautifulSoup(data)
+        for item in soup.find(role="problem"):
+            if type(item) is Tag:
+                parsed_soup += ''.join(item.findAll(text = True))
+            else:
+                parsed_soup += unicode(item)
+        saveData = saveData + "\n" + "Problem number:" + str(i) + "\n" + parsed_soup
+    file = open("D:\\EulerProblems.txt", "w") #Give valid path for saving the document, you can change the file type as well 
+    try:
+        file.write(saveData)
+        file.close()
+    except:
+        pass
+    print "--- Scrapping and saving data is completed ---"
+projectEulerScrapper()
